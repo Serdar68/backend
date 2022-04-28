@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import express from "express";
 dotenv.config();
 
-console.log(process.env.MONGO_CONNECTION);
+const port = process.env.PORT || 3000;
 
 const app = express();
 
@@ -35,10 +35,11 @@ app.patch("/users/:id", async (req, res) => {
 });
 
 // edit user neuer user eintragen
-app.post("/user/new", async (req, res) => {
+app.post("/users/new", async (req, res) => {
   try {
-    await User.create({ firstName }, { lastName }, { age });
-    res.send("neuer eintrag");
+    const newUser = new User(req.body);
+    const tempUser = await newUser.save();
+    return res.json(tempUser);
   } catch {
     res.status(500).send({ massage: "Eintrag funktioniert nicht!" });
   }
@@ -55,6 +56,8 @@ app.delete("/user/:id", async (req, res) => {
   }
 });
 
-app.listen(3000, function () {
-  console.log("http://localhost:3000, listening on port 3000");
+mongoose.connect(process.env.MONGO_CONNECTION).then(() => {
+  app.listen(port, () => {
+    console.log(`users API listening on ${port}`);
+  });
 });
