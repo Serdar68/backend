@@ -18,7 +18,12 @@ const User = mongoose.model("User", userSchema);
 // Hauptseite
 app.use(express.json());
 app.get("/", async (req, res) => {
-  const users = await User.find().exec();
+  let users = [];
+  if (req.query.minage) {
+    users = await User.find({ age: { $gt: req.query.minage } }).exec();
+  } else {
+    users = await User.find().exec();
+  }
   return res.json(users);
 });
 
