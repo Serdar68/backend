@@ -65,12 +65,4 @@ mongoose.connect(process.env.MONGO_CONNECTION).then(() => {
   app.listen(port, () => {
     console.log(`users API listening on ${port}`);
   });
-
-  mongoose.connection.openUri(TEAM_MANAGER_MONGODB_URI, function (err) {
-    if (err) {
-      logger.warn("Failed to connect to database: " + err);
-    } else {
-      logger.info("Successfully connected to database. ");
-    }
-  });
 });
